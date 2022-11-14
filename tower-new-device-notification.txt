@@ -1,0 +1,4 @@
+<!-- Subject: New Login From {device} -->
+A new device was logged into your account.
+
+Not you?  Contact support so we can assist you.

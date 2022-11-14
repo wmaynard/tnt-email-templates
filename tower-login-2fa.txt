@@ -1,9 +1,9 @@
-New login from {device}.
+<!-- Subject: Your Rumble Verification Code -->
 
-Please confirm this is you by copying the link below and pasting it into your browser.
+Here is your verification code for your Rumble account:
 
-{endpoint}?id={accountId}&code={code}
+{code}
 
-This link expires in {duration}.
+This code expires in {duration}.
 
 Not you?  It's safe to ignore this email.
