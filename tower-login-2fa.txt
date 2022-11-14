@@ -1,0 +1,9 @@
+New login from {device}.
+
+Please confirm this is you by copying the link below and pasting it into your browser.
+
+{endpoint}?id={accountId}&code={code}
+
+This link expires in {duration}.
+
+Not you?  It's safe to ignore this email.

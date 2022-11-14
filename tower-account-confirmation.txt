@@ -1,0 +1,9 @@
+Confirm your email address
+
+Copy the link below and paste it into your browser to confirm your account.
+
+{endpoint}?id={accountId}&code={code}
+
+This link will expire in {duration}.
+
+Not you?  It's safe to ignore this email.
