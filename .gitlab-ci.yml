@@ -22,8 +22,8 @@ eng:
   tags:
     - kubernetes
   variables:
-    AWS_ACCESS_KEY_ID: $ENG_ACCESS_KEY #still needs to be created
-    AWS_SECRET_ACCESS_KEY: $ENG_ACCESS_KEY_SECRET
+    AWS_ACCESS_KEY_ID: $ACCESS_KEY #still needs to be created
+    AWS_SECRET_ACCESS_KEY: $ACCESS_KEY_SECRET
   script:
     - |
         for f in ./*.json; do
@@ -35,37 +35,12 @@ eng:
           sed -i "s/__text__/`echo $TXT`/g" $f;
           sed -i "s,__html__,`echo $HTML`,g" $f;
           cat $f
+          aws ses create-template --cli-input-json file://$f --region us-east-1
         done
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - when: always
 
-
-prod:
-  stage: prod
-  allow_failure: false
-  image:
-    name: amazon/aws-cli
-  variables:
-    AWS_ACCESS_KEY_ID: $PROD_ACCESS_KEY #still needs to be created
-    AWS_SECRET_ACCESS_KEY: $PROD_ACCESS_KEY_SECRET
-  script:
-    - |
-        for f in ./*.json; do
-          FN=${f%.*};
-          TXT=$(cat "${FN}.txt");
-          HTML=$(cat "${FN}.html");
-          SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
-          sed "s/__text__/`echo $TXT`/g" $f;
-          sed "s/__html__/`echo $HTML`/g" $f;
-        done
-    #aws ses create-template --cli-input-json file://tower-account-confirmation.json this goes in the loop eventually
-  rules:
-    - if: '$BUILD_DISABLED'
-      when: never
-    - if: $CI_COMMIT_TAG
-      when: never
-    - when: manual
 
 
