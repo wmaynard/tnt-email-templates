@@ -6,8 +6,7 @@ variables:
   
 
 stages:
-  - eng
-  - prod
+  - upload
 
 workflow:
   rules:
@@ -16,8 +15,8 @@ workflow:
     - when: always
 
 
-eng:
-  stage: eng
+template_upload:
+  stage: upload
   image: amazon/aws-cli
   tags:
     - kubernetes
@@ -35,7 +34,7 @@ eng:
           sed -i "s/__text__/`echo $TXT`/g" $f;
           sed -i "s,__html__,`echo $HTML`,g" $f;
           cat $f
-          aws ses create-template --cli-input-json file://$f --region us-east-1
+          aws ses update-template --cli-input-json file://$f --region us-east-1
         done
   rules:
     - if: $CI_COMMIT_TAG
