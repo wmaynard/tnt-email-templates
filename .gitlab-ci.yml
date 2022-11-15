@@ -1,0 +1,73 @@
+variables:
+  # KUBE_INGRESS_BASE_DOMAIN is the application deployment domain and should be set as a variable at the group or project level.
+  KUBE_INGRESS_BASE_DOMAIN: nonprod.tower.cdrentertainment.com
+  HELM_SCALE_EXTRA_ARGS: --set postgresql.enabled="false" 
+  DOCKER_TLS_CERTDIR: ""  # https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
+  
+
+stages:
+  - eng
+  - prod
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: never
+    - when: always
+
+
+eng:
+  stage: app_build
+  image: amazon/aws-cli
+  tags:
+    - kubernetes
+  variables:
+    AWS_ACCESS_KEY_ID: $ENG_ACCESS_KEY #still needs to be created
+    AWS_SECRET_ACCESS_KEY: $ENG_ACCESS_KEY_SECRET
+  script:
+    - TXT=`cat tower-account-confirmation.txt` sed "s/__text__/`echo $TXT`/g" tower-account-confirmation.json
+    - HTML=`cat tower-account-confirmation.html` sed "s/__text__/`echo $HTML`/g" tower-account-confirmation.json
+    #- aws ses create-template --cli-input-json file://tower-account-confirmation.json
+    - TXT=`cat tower-login-2fa.txt` sed "s/__text__/`echo $TXT`/g" tower-login-2fa.json
+    - HTML=`cat tower-login-2fa.html` sed "s/__text__/`echo $HTML`/g" tower-login-2fa.json
+    #- aws ses create-template --cli-input-json file://tower-login-2fa.json
+    - TXT=`cat tower-new-device-notification.txt` sed "s/__text__/`echo $TXT`/g" tower-new-device-notification.json
+    - HTML=`cat tower-new-device-notification.html` sed "s/__text__/`echo $HTML`/g" tower-new-device-notification.json
+    #- aws ses create-template --cli-input-json file://tower-new-device-notification.json
+    - TXT=`cat tower-reset-password.txt` sed "s/__text__/`echo $TXT`/g" tower-reset-password.json
+    - HTML=`cat tower-reset-password.html` sed "s/__text__/`echo $HTML`/g" tower-reset-password.json
+    #- aws ses create-template --cli-input-json file://tower-reset-password.json
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: always
+
+
+prod:
+  stage: build
+  allow_failure: false
+  image:
+    name: amazon/aws-cli
+  variables:
+    AWS_ACCESS_KEY_ID: $PROD_ACCESS_KEY #still needs to be created
+    AWS_SECRET_ACCESS_KEY: $PROD_ACCESS_KEY_SECRET
+  script:
+    - TXT=`cat tower-account-confirmation.txt` sed "s/__text__/`echo $TXT`/g" tower-account-confirmation.json
+    - HTML=`cat tower-account-confirmation.html` sed "s/__text__/`echo $HTML`/g" tower-account-confirmation.json
+    #- aws ses create-template --cli-input-json file://tower-account-confirmation.json
+    - TXT=`cat tower-login-2fa.txt` sed "s/__text__/`echo $TXT`/g" tower-login-2fa.json
+    - HTML=`cat tower-login-2fa.html` sed "s/__text__/`echo $HTML`/g" tower-login-2fa.json
+    #- aws ses create-template --cli-input-json file://tower-login-2fa.json
+    - TXT=`cat tower-new-device-notification.txt` sed "s/__text__/`echo $TXT`/g" tower-new-device-notification.json
+    - HTML=`cat tower-new-device-notification.html` sed "s/__text__/`echo $HTML`/g" tower-new-device-notification.json
+    #- aws ses create-template --cli-input-json file://tower-new-device-notification.json
+    - TXT=`cat tower-reset-password.txt` sed "s/__text__/`echo $TXT`/g" tower-reset-password.json
+    - HTML=`cat tower-reset-password.html` sed "s/__text__/`echo $HTML`/g" tower-reset-password.json
+    #- aws ses create-template --cli-input-json file://tower-reset-password.json
+  rules:
+    - if: '$BUILD_DISABLED'
+      when: never
+    - if: $CI_COMMIT_TAG
+      when: never
+
+
