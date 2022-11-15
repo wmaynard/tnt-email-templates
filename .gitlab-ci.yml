@@ -17,7 +17,7 @@ workflow:
 
 
 eng:
-  stage: app_build
+  stage: eng
   image: amazon/aws-cli
   tags:
     - kubernetes
@@ -44,7 +44,7 @@ eng:
 
 
 prod:
-  stage: build
+  stage: prod
   allow_failure: false
   image:
     name: amazon/aws-cli
