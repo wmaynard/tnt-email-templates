@@ -27,12 +27,17 @@ eng:
   script:
     - |
         for f in ./*.json; do
-          FN=${f%.*}
-          TXT=$(cat "${FN}.txt")
-          HTML=$(cat "${FN}.html")
-          SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5)
-          sed "s/__text__/`echo $TXT`/g" $f
-          sed "s/__html__/`echo $HTML`/g" $f
+          FN=${f%.*};
+          echo $FN;
+          TXT=$(cat "${FN}.txt");
+          echo $TXT;
+          HTML=$(cat "${FN}.html");
+          echo $HTML;
+          SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
+          echo $SBJ;
+          sed "s/__text__/`echo $TXT`/g" $f;
+          sed "s/__html__/`echo $HTML`/g" $f;
+          sed "s/__subject__/`echo $SBJ`/g" $f;
         done
   rules:
     - if: $CI_COMMIT_TAG
@@ -51,12 +56,12 @@ prod:
   script:
     - |
         for f in ./*.json; do
-          FN=${f%.*}
-          TXT=$(cat "${FN}.txt")
-          HTML=$(cat "${FN}.html")
-          SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5)
-          sed "s/__text__/`echo $TXT`/g" $f
-          sed "s/__html__/`echo $HTML`/g" $f
+          FN=${f%.*};
+          TXT=$(cat "${FN}.txt");
+          HTML=$(cat "${FN}.html");
+          SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
+          sed "s/__text__/`echo $TXT`/g" $f;
+          sed "s/__html__/`echo $HTML`/g" $f;
         done
     #aws ses create-template --cli-input-json file://tower-account-confirmation.json this goes in the loop eventually
   rules:
