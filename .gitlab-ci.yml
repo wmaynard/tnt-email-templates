@@ -28,16 +28,13 @@ eng:
     - |
         for f in ./*.json; do
           FN=${f%.*};
-          echo $FN;
           TXT=$(cat "${FN}.txt");
-          echo $TXT;
           HTML=$(cat "${FN}.html");
-          echo $HTML;
           SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
-          echo $SBJ;
-          sed "s/__subject__/`echo $SBJ`/g" $f;
-          sed "s/__text__/`echo $TXT`/g" $f;
-          sed "s,__html__,`echo $HTML`,g" $f;
+          sed -i "s/__subject__/`echo $SBJ`/g" $f;
+          sed -i "s/__text__/`echo $TXT`/g" $f;
+          sed -i "s,__html__,`echo $HTML`,g" $f;
+          cat $f
         done
   rules:
     - if: $CI_COMMIT_TAG
