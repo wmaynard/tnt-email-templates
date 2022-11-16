@@ -30,6 +30,7 @@ dev:
     - |
         for f in ./*.json; do
           FN=${f%.*};
+          NAME=${f:2};
           TXT=$(cat "${FN}.txt");
           HTML=$(cat "${FN}.html");
           SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
@@ -161,12 +162,14 @@ delete-dev:
   variables:
     AWS_ACCESS_KEY_ID: $ACCESS_KEY #still needs to be created
     AWS_SECRET_ACCESS_KEY: $ACCESS_KEY_SECRET
+    SOME_VAR: foobar
   script:
     - |
       for f in ./*.json; do
         FN=${f%.*};
-        echo aws ses delete-template --template-name 107-${FN:2} --region us-east-1
+        aws ses delete-template --template-name 107-${FN:2} --region us-east-1
       done
+      echo $SOME_VAR
   rules:
     - if: $CI_COMMIT_TAG
       when: never
