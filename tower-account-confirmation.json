@@ -1,6 +1,6 @@
 {
     "Template": {
-      "TemplateName": "tower-account-confirmation",
+      "TemplateName": "__env__tower-account-confirmation",
       "SubjectPart": "__subject__",
       "HtmlPart": "__html__",
       "TextPart": "__text__"

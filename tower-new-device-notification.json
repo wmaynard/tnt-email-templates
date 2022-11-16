@@ -1,6 +1,6 @@
 {
     "Template": {
-      "TemplateName": "tower-new-device-notification",
+      "TemplateName": "__env__tower-new-device-notification",
       "SubjectPart": "__subject__",
       "HtmlPart": "__html__",
       "TextPart": "__text__"
