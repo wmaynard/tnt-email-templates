@@ -6,7 +6,8 @@ variables:
   
 
 stages:
-  - upload
+  - dev
+  - prod
 
 workflow:
   rules:
