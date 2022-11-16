@@ -6,6 +6,7 @@ variables:
   
 
 stages:
+  - danger-zone
   - dev
   - stage
   - prod
@@ -125,7 +126,7 @@ stage-c:
       when: never
     - when: manual
 
-prod:
+prod-a1/a2:
   stage: prod
   image: amazon/aws-cli
   tags:
@@ -146,6 +147,33 @@ prod:
         sed -i "s,__html__,`echo $HTML`,g" $f;
         cat $f
         aws ses update-template --cli-input-json file://$f --region us-east-1 || aws ses create-template --cli-input-json file://$f --region us-east-1
+      done
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: manual
+
+delete-dev:
+  stage: danger-zone
+  image: amazon/aws-cli
+  tags:
+    - kubernetes
+  variables:
+    AWS_ACCESS_KEY_ID: $ACCESS_KEY #still needs to be created
+    AWS_SECRET_ACCESS_KEY: $ACCESS_KEY_SECRET
+  script:
+    - |
+      for f in ./*.json; do
+        FN=${f%.*};
+        TXT=$(cat "${FN}.txt");
+        HTML=$(cat "${FN}.html");
+        SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
+        sed -i "s/__env__/`echo 107-`/g" $f;
+        sed -i "s/__subject__/`echo $SBJ`/g" $f;
+        sed -i "s/__text__/`echo $TXT`/g" $f;
+        sed -i "s,__html__,`echo $HTML`,g" $f;
+        cat $f
+        aws ses delete-template --template-name $FN --region us-east-1
       done
   rules:
     - if: $CI_COMMIT_TAG
