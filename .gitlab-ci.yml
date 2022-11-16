@@ -15,8 +15,8 @@ workflow:
     - when: always
 
 
-upload_dev:
-  stage: upload
+update:
+  stage: dev
   image: amazon/aws-cli
   tags:
     - kubernetes
@@ -42,8 +42,8 @@ upload_dev:
       when: never
     - when: always
 
-upload_prod:
-  stage: upload
+update_prod:
+  stage: prod
   image: amazon/aws-cli
   tags:
     - kubernetes
