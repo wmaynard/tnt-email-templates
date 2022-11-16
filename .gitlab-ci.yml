@@ -165,7 +165,7 @@ delete-dev:
     - |
       for f in ./*.json; do
         FN=${f%.*};
-        echo aws ses delete-template --template-name ${FN:2} --region us-east-1
+        echo aws ses delete-template --template-name 107-${FN:2} --region us-east-1
       done
   rules:
     - if: $CI_COMMIT_TAG
