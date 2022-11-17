@@ -26,7 +26,7 @@ local:
   variables:
     AWS_ACCESS_KEY_ID: $ACCESS_KEY #still needs to be created
     AWS_SECRET_ACCESS_KEY: $ACCESS_KEY_SECRET
-    ENV: 007
+    ENV: "007"
   script:
     - |
       for f in ./*.html; do
@@ -40,7 +40,7 @@ local:
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__name__/`echo $ENV-NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
         sed -i "s,__html__,`echo $HTML`,g" $JSON;
@@ -74,7 +74,7 @@ dev:
           SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
           echo $TEMPLATE_CONTENT > $JSON;
-          sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+          sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
           sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
           sed -i "s/__text__/`echo $TEXT`/g" $JSON;
           sed -i "s,__html__,`echo $HTML`,g" $JSON;
@@ -108,7 +108,7 @@ stage-a:
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
         sed -i "s,__html__,`echo $HTML`,g" $JSON;
@@ -142,7 +142,7 @@ stage-b:
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
         sed -i "s,__html__,`echo $HTML`,g" $JSON;
@@ -176,7 +176,7 @@ stage-c:
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
         sed -i "s,__html__,`echo $HTML`,g" $JSON;
@@ -210,7 +210,7 @@ prod-a1/a2:
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
         sed -i "s,__html__,`echo $HTML`,g" $JSON;
