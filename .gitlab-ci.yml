@@ -3,7 +3,7 @@ variables:
   KUBE_INGRESS_BASE_DOMAIN: nonprod.tower.cdrentertainment.com
   HELM_SCALE_EXTRA_ARGS: --set postgresql.enabled="false" 
   DOCKER_TLS_CERTDIR: ""  # https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
-  
+  JSON: ./upload_template.json
 
 stages:
   - danger-zone
@@ -35,12 +35,12 @@ dev:
           TXT=$(cat "${FN}.txt");
           HTML=$(cat "${FN}.html");
           SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
-          sed -i "s/__env__/`echo $ENV-`/g" $f;
-          sed -i "s/__subject__/`echo $SBJ`/g" $f;
-          sed -i "s/__text__/`echo $TXT`/g" $f;
-          sed -i "s,__html__,`echo $HTML`,g" $f;
-          cat $f
-          aws ses update-template --cli-input-json file://$f --region us-east-1 || aws ses create-template --cli-input-json file://$f --region us-east-1
+          sed -i "s/__env__/`echo $ENV-`/g" $JSON;
+          sed -i "s/__subject__/`echo $SBJ`/g" $JSON;
+          sed -i "s/__text__/`echo $TXT`/g" $JSON;
+          sed -i "s,__html__,`echo $HTML`,g" $JSON;
+          cat $JSON
+          echo aws ses update-template --cli-input-json file://$f --region us-east-1 || aws ses create-template --cli-input-json file://$f --region us-east-1
         done
   rules:
     - if: $CI_COMMIT_TAG
@@ -172,7 +172,7 @@ delete-dev:
     - |
       for f in ./*.json; do
         FN=${f%.*};
-        aws ses delete-template --template-name $ENV-${FN:2} --region us-east-1
+        echo aws ses delete-template --template-name $ENV-${FN:2} --region us-east-1
       done
   rules:
     - if: $CI_COMMIT_TAG
