@@ -4,12 +4,13 @@ variables:
   HELM_SCALE_EXTRA_ARGS: --set postgresql.enabled="false" 
   DOCKER_TLS_CERTDIR: ""  # https://gitlab.com/gitlab-org/gitlab-runner/issues/4501
   JSON: ./upload_template.json
+  TEMPLATE_CONTENT: '{"Template":{"TemplateName":"__name__","SubjectPart":"__subject__","HtmlPart":"__html__","TextPart":"__text__"}}'
 
 stages:
-  - danger-zone
   - dev
   - stage
   - prod
+  - danger-zone
 
 workflow:
   rules:
@@ -29,13 +30,14 @@ dev:
     ENV: 107
   script:
     - |
-        for f in ./*.json; do
+        for f in ./*.html; do
           FN=${f%.*};
           NAME=${f:2};
           TXT=$(cat "${FN}.txt");
           HTML=$(cat "${FN}.html");
           SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
-          sed -i "s/__env__/`echo $ENV-`/g" $JSON;
+          echo $TEMPLATE_CONTENT > $JSON;
+          sed -i "s/__name__/`echo $ENV-`/g" $JSON;
           sed -i "s/__subject__/`echo $SBJ`/g" $JSON;
           sed -i "s/__text__/`echo $TXT`/g" $JSON;
           sed -i "s,__html__,`echo $HTML`,g" $JSON;
