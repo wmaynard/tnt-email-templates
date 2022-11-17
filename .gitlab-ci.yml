@@ -35,7 +35,7 @@ dev:
           NAME=${f:2};
           TEXT=$(cat "${FILENAME}.txt");
           HTML=$(cat "${FILENAME}.html");
-          SUBJECT=$(head -n 1 "${FILENAME}.txt" | tail -c +6 | head -c -5);
+          SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
           echo $TEMPLATE_CONTENT > $JSON;
           sed -i "s/__name__/`echo $ENV-`/g" $JSON;
@@ -49,6 +49,27 @@ dev:
     - if: $CI_COMMIT_TAG
       when: never
     - when: always
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
 stage-a:
   stage: stage

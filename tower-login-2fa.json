@@ -1,8 +1,0 @@
-{
-    "Template": {
-      "TemplateName": "__env__tower-login-2fa",
-      "SubjectPart": "__subject__",
-      "HtmlPart": "__html__",
-      "TextPart": "__text__"
-    }
-  }
