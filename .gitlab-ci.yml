@@ -31,10 +31,11 @@ dev:
   script:
     - |
         for f in ./*.html; do
+          FILENAME=${f%.*};
           NAME=${f:2};
-          TEXT=$(cat "${FN}.txt");
-          HTML=$(cat "${FN}.html");
-          SUBJECT=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
+          TEXT=$(cat "${FILENAME}.txt");
+          HTML=$(cat "${FILENAME}.html");
+          SUBJECT=$(head -n 1 "${FILENAME}.txt" | tail -c +6 | head -c -5);
       
           echo $TEMPLATE_CONTENT > $JSON;
           sed -i "s/__name__/`echo $ENV-`/g" $JSON;
