@@ -38,6 +38,8 @@ dev:
           SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
           echo $TEMPLATE_CONTENT > $JSON;
+          sed "s/\"/'/g" $HTML
+          sed "s/\"/'/g" $TEXT
           sed -i "s/__name__/`echo $ENV-`/g" $JSON;
           sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
           sed -i "s/__text__/`echo $TEXT`/g" $JSON;
