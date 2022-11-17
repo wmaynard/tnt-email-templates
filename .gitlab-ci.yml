@@ -32,8 +32,8 @@ dev:
     - |
         for f in ./*.html; do
           FILENAME=${f%.*};
-          sed "s/\"/'/g" ${FILENAME}.txt;
-          sed "s/\"/'/g" ${FILENAME}.html;
+          sed -i "s/\"/'/g" ${FILENAME}.txt;
+          sed -i "s/\"/'/g" ${FILENAME}.html;
       
           NAME=${f:2};
           TEXT=$(cat "${FILENAME}.txt");
