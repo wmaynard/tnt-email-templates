@@ -18,6 +18,39 @@ workflow:
       when: never
     - when: always
 
+local:
+  stage: dev
+  image: amazon/aws-cli
+  tags:
+    - kubernetes
+  variables:
+    AWS_ACCESS_KEY_ID: $ACCESS_KEY #still needs to be created
+    AWS_SECRET_ACCESS_KEY: $ACCESS_KEY_SECRET
+    ENV: 007
+  script:
+    - |
+      for f in ./*.html; do
+        FILENAME=${f%.*};
+        sed -i "s/\"/'/g" ${FILENAME}.txt;
+        sed -i "s/\"/'/g" ${FILENAME}.html;
+      
+        NAME=${f:2};
+        TEXT=$(cat "${FILENAME}.txt");
+        HTML=$(cat "${FILENAME}.html");
+        SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
+      
+        echo $TEMPLATE_CONTENT > $JSON;
+        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        cat $JSON
+        aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
+      done
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: never
+    - when: always
 
 dev:
   stage: dev
@@ -27,7 +60,7 @@ dev:
   variables:
     AWS_ACCESS_KEY_ID: $ACCESS_KEY #still needs to be created
     AWS_SECRET_ACCESS_KEY: $ACCESS_KEY_SECRET
-    ENV: 000
+    ENV: 107
   script:
     - |
         for f in ./*.html; do
@@ -53,27 +86,6 @@ dev:
       when: never
     - when: always
       
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
 stage-a:
   stage: stage
   image: amazon/aws-cli
@@ -85,24 +97,29 @@ stage-a:
     ENV: 207
   script:
     - |
-      for f in ./*.json; do
-        FN=${f%.*};
-        TXT=$(cat "${FN}.txt");
-        HTML=$(cat "${FN}.html");
-        SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
+      for f in ./*.html; do
+        FILENAME=${f%.*};
+        sed -i "s/\"/'/g" ${FILENAME}.txt;
+        sed -i "s/\"/'/g" ${FILENAME}.html;
+      
+        NAME=${f:2};
+        TEXT=$(cat "${FILENAME}.txt");
+        HTML=$(cat "${FILENAME}.html");
+        SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
+      
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__env__/`echo $ENV-`/g" $f;
-        sed -i "s/__subject__/`echo $SBJ`/g" $f;
-        sed -i "s/__text__/`echo $TXT`/g" $f;
-        sed -i "s,__html__,`echo $HTML`,g" $f;
-        cat $f
-        echo aws ses update-template --cli-input-json file://$f --region us-east-1 || aws ses create-template --cli-input-json file://$f --region us-east-1
+        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        cat $JSON
+        aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
       done
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - when: manual
-
+      
 stage-b:
   stage: stage
   image: amazon/aws-cli
@@ -114,17 +131,23 @@ stage-b:
     ENV: 217
   script:
     - |
-      for f in ./*.json; do
-        FN=${f%.*};
-        TXT=$(cat "${FN}.txt");
-        HTML=$(cat "${FN}.html");
-        SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
-        sed -i "s/__env__/`echo $ENV-`/g" $f;
-        sed -i "s/__subject__/`echo $SBJ`/g" $f;
-        sed -i "s/__text__/`echo $TXT`/g" $f;
-        sed -i "s,__html__,`echo $HTML`,g" $f;
-        cat $f
-        aws ses update-template --cli-input-json file://$f --region us-east-1 || aws ses create-template --cli-input-json file://$f --region us-east-1
+      for f in ./*.html; do
+        FILENAME=${f%.*};
+        sed -i "s/\"/'/g" ${FILENAME}.txt;
+        sed -i "s/\"/'/g" ${FILENAME}.html;
+      
+        NAME=${f:2};
+        TEXT=$(cat "${FILENAME}.txt");
+        HTML=$(cat "${FILENAME}.html");
+        SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
+      
+        echo $TEMPLATE_CONTENT > $JSON;
+        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        cat $JSON
+        aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
       done
   rules:
     - if: $CI_COMMIT_TAG
@@ -142,23 +165,29 @@ stage-c:
     ENV: 227
   script:
     - |
-      for f in ./*.json; do
-        FN=${f%.*};
-        TXT=$(cat "${FN}.txt");
-        HTML=$(cat "${FN}.html");
-        SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
-        sed -i "s/__env__/`echo $ENV-`/g" $f;
-        sed -i "s/__subject__/`echo $SBJ`/g" $f;
-        sed -i "s/__text__/`echo $TXT`/g" $f;
-        sed -i "s,__html__,`echo $HTML`,g" $f;
-        cat $f
-        aws ses update-template --cli-input-json file://$f --region us-east-1 || aws ses create-template --cli-input-json file://$f --region us-east-1
+      for f in ./*.html; do
+        FILENAME=${f%.*};
+        sed -i "s/\"/'/g" ${FILENAME}.txt;
+        sed -i "s/\"/'/g" ${FILENAME}.html;
+      
+        NAME=${f:2};
+        TEXT=$(cat "${FILENAME}.txt");
+        HTML=$(cat "${FILENAME}.html");
+        SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
+      
+        echo $TEMPLATE_CONTENT > $JSON;
+        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        cat $JSON
+        aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
       done
   rules:
     - if: $CI_COMMIT_TAG
       when: never
     - when: manual
-
+      
 prod-a1/a2:
   stage: prod
   image: amazon/aws-cli
@@ -170,17 +199,23 @@ prod-a1/a2:
     ENV: 308
   script:
     - |
-      for f in ./*.json; do
-        FN=${f%.*};
-        TXT=$(cat "${FN}.txt");
-        HTML=$(cat "${FN}.html");
-        SBJ=$(head -n 1 "${FN}.txt" | tail -c +6 | head -c -5);
-        sed -i "s/__env__/`echo $ENV-`/g" $f;
-        sed -i "s/__subject__/`echo $SBJ`/g" $f;
-        sed -i "s/__text__/`echo $TXT`/g" $f;
-        sed -i "s,__html__,`echo $HTML`,g" $f;
-        cat $f
-        aws ses update-template --cli-input-json file://$f --region us-east-1 || aws ses create-template --cli-input-json file://$f --region us-east-1
+      for f in ./*.html; do
+        FILENAME=${f%.*};
+        sed -i "s/\"/'/g" ${FILENAME}.txt;
+        sed -i "s/\"/'/g" ${FILENAME}.html;
+      
+        NAME=${f:2};
+        TEXT=$(cat "${FILENAME}.txt");
+        HTML=$(cat "${FILENAME}.html");
+        SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
+      
+        echo $TEMPLATE_CONTENT > $JSON;
+        sed -i "s/__name__/`echo $ENV-`/g" $JSON;
+        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        cat $JSON
+        aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
       done
   rules:
     - if: $CI_COMMIT_TAG
