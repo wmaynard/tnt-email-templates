@@ -56,7 +56,7 @@ local:
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
       
         echo Replacing html in JSON
-        sed -i "s/__html__/`echo $HTML`,g" $JSON;
+        sed -i "s/__html__/`echo $HTML`/g" $JSON;
       
         cat $JSON
       
