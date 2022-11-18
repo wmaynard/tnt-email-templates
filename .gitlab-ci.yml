@@ -46,7 +46,7 @@ local:
         echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
       
-        echo Replacing template name ($TEMPLATE_NAME) in JSON ($JSON)
+        echo Replacing template name $TEMPLATE_NAME in JSON $JSON
         sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
       
         echo Replacing subject in JSON
