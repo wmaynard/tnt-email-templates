@@ -57,7 +57,6 @@ local:
       
         echo Replacing html in JSON
         sed -i "s~__html__~`echo $HTML`~g" $JSON;
-        sed -i "s~__html__~`echo \&`~g $JSON;
       
         cat $JSON
       
@@ -112,7 +111,6 @@ dev:
       
         echo Replacing html in JSON
         sed -i "s~__html__~`echo $HTML`~g" $JSON;
-        sed -i "s~__html__~`echo \\&`~g" $JSON;
       
         cat $JSON
       

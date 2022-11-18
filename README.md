@@ -1,92 +1,166 @@
-# email-templates
+# Introduction
 
+As part of the Rumble Account integrations, email support was added.  Emails are sent out for various events, and the platform email templates are maintained from this repository.  Once pushed, the changes can be rolled out on a per-environment basis using Gitlab's pipelines.
 
+## Background
 
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+Amazon SES requires us to send them a JSON file containing all of our template information for an email:
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.cdrentertainment.com/platform-services/email-templates.git
-git branch -M master
-git push -uf origin master
+{
+    "Template":
+    {
+        "TemplateName": "__name__",    // Alphanumeric characters and dashes only.
+        "SubjectPart": "__subject__",  // Subject line of the email.
+        "HtmlPart": "__html__",        // The HTML content for enabled clients.
+        "TextPart": "__text__"         // The text content for clients with HTML disabled.
+    }
+}
 ```
 
-## Integrate with your tools
+When pushed, the CI script in Gitlab will dynamically generate these .JSON files by replacing the `__underscores__` with their respective values and upload them to AWS.  The script contains a sleep command because AWS has a requirement that the update / create commands can not be used once per second.
 
-- [ ] [Set up project integrations](https://gitlab.cdrentertainment.com/platform-services/email-templates/-/settings/integrations)
+## Getting Started: Hello, World!
 
-## Collaborate with your team
+1. The template name is the filename.  Create two separate files:
+   * `hello-world.html`
+   * `hello-world.txt`
+2. The subject is contained in the first line of the `.html` file.  Continuing the above example:
+```
+<!-- Subject: Hello World Template -->
+<html lang='en'>
+    ...
+</html>
+```
+3. Add some content to your `.html` file:
+```
+<!-- Subject: Hello World Template -->
+<html lang='en'>
+<body>
+    <h1>Hello, World!</h1>
+    <p>Lorem ipsum dolor sit amet.</p>
+    <h4>&copy; 2022 Rumble Entertainment</h4>
+</body>
+</html>
+```
+4. Add some content to your `.txt` file:
+```
+Hello, World!
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+Lorem ipsum dolor sit amet.
 
-## Test and Deploy
+Copyright 2022 Rumble Entertainment
+```
+5. Commit and push the repo.
+6. On the left hand menu in gitlab, click CI/CD -> Pipelines -> {blocked button} to see the deployment progress.
 
-Use the built-in continuous integration in GitLab.
+If the CI script is successful (`.gitlab-ci.yml`), changes are deployed to dev automatically.  Other environments will be listed on this page, but require manual action to run. You can check the script output to ensure the template matches your expectations.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## Next steps: Greeting a particular player
 
-***
+Of course, a template is only as useful as the replacements we can make to it.  The standard way platform makes its replacements is by looking for values encapsulated in curly brackets, but these will vary depending on each template.
 
-# Editing this README
+1. Start a conversation with the developer implementing the emails on the Platform side.
+2. Let them know what replacements you need.
+3. Add those replacement placeholders to the templates (in both the HTML and text files):
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```
+<!-- Subject: Hello, {firstName}! -->
+<html lang='en'>
+<body>
+    <h1>Hello, {fullName}!</h1>
+    <p>Lorem ipsum dolor sit amet.</p>
+    <a href='{endpoint}'>Acknowledge this email</a>
+    <h4>&copy; 2022 Rumble Entertainment</h4>
+</body>
+</html>
+```
+4. Push your changes; the Platform dev will need to update the respective endpoints to include these changes.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+## Platform Support
 
-## Name
-Choose a self-explaining name for your project.
+The DMZ is responsible for all outgoing emails and requests coming in from emails (if you're providing links).  For organizational purposes, each Platform service should have its own helper class responsible for sending emails.  For example, DMZ -> Utilities -> PlayerServiceEmail.cs contains all of the code tasked with sending the RumbleAccountLogin emails.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+The process for adding more emails is:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+1. Create a method for each template, along with its replacements.  Continuing the Hello, World example above:
+```
+public static class FictionalServiceEmail
+{
+    public const string TEMPLATE_HELLO_WORLD = "hello-world";
+    
+    public static void SendHelloWorld(string email, string firstName, string fullName, string acknowledgeUrl) =>
+        AmazonSes.SendEmail(email, TEMPLATE_HELLO_WORLD, replacements: new RumbleJson
+        {
+            { "firstName", firstName },
+            { "fullName", fullName },
+            { "endpoint", acknowledgeUrl }
+        }).Wait();
+}
+```
+2. Create an endpoint in the respective DMZ Controller that calls this method, and the acknowledge endpoint:
+```
+[Route("fiction"), RequireAuth(AuthType.ADMIN_TOKEN)]
+public class FictionalController : DmzController
+{
+    [HttpPost, Route("helloWorld")
+    public ActionResult SendHelloWorld()
+    {
+        string email = Require<string>("email");
+        string firstName = Require<string>("firstName");
+        string fullName = Optional<string>("fullName") ?? firstName;
+        string url = PlatformEnvironment.Url("/dmz/fiction/acknowledge");
+        
+        FictionalServiceEmail.SendHelloWorld(email, firstName, lastname, url);
+        
+        return Ok();
+    }
+    
+    [HttpGet, Route("acknowledge"), NoAuth]
+    public ActionResult AcknowledgeHelloWorld() => Ok(new RumbleJson
+    { 
+        { "message", "Thanks for clicking the link!" } 
+    });
+}
+```
+3. In your Platform project, hit the DMZ endpoint with the `ApiService` to send out the email:
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+```
+...
+    string email = "joe.mcfugal@rumbleentertainment.com";
+    string firstName = "Joe";
+    string lastName = "McFugal";
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+    _apiService
+        .Request(PlatformEnvironment.Url("/dmz/fiction/helloWorld)
+        .AddAuthorization(_config.AdminToken)
+        .SetPayload(new RumbleJson
+        {
+            { "email", email },
+            { "firstName", firstName },
+            { "fullName", ($"{firstName} {lastName}").Trim() }
+        })
+        .OnFailure(response => Log.Error(Owner.Default, "Unable to send Hello World Email", data: new
+        {
+            Response = response.AsRumbleJson
+        }));
+        .Post(out RumbleJson response, out int code);
+...
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+## Restrictions
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+There are a couple of hiccups to be aware of when working in these templates:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+1. The tilde (`~`) is currently used as a delimiter when the CI script is making replacements.  Consequently, using a tilde in any 
+2. While the CI script does replace double quotes in the files with single quotes, it hasn't been thoroughly tested any may be on the brittle side.
+3. Deleting templates requires using the CLI in your own terminal.  Once a template is uploaded, it can't be removed, even if you delete the file from the repo.
+4. AWS SES does not let us create / update / delete templates more than once per second, so the CI script by necessity has sleep times in the loops used to update everything.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Future Improvements
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+* Bulletproofing the CI script is a must for long term viability.
+  * Using something less restrictive than `sed` for replacements would be great.
+* The CI script should eventually delete templates that _aren't_ found in this repo.
+* Adding a final step that can be used to delete existing templates may be nice, though should only be rarely used for debugging purposes.
