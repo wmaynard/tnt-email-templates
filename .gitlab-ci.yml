@@ -46,14 +46,18 @@ local:
         echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
       
-        echo Replacing template name in JSON
+        echo Replacing template name ($TEMPLATE_NAME) in JSON ($JSON)
         sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+      
         echo Replacing subject in JSON
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+      
         echo Replacing text in JSON
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+      
         echo Replacing html in JSON
         sed -i "s/__html__/`echo $HTML`,g" $JSON;
+      
         cat $JSON
       
         echo Updating or Creating template on AWS
