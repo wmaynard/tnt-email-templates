@@ -31,7 +31,7 @@ local:
     - |
       for f in ./*.html; do
         FILENAME=${f%.*};
-        TEMPLATE_NAME=${ENV}-${FILENAME}
+        TEMPLATE_NAME=${ENV}-${FILENAME:2}
       
         echo Replacing double quotes in files
         sed -i "s/\"/'/g" ${FILENAME}.txt;
