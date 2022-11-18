@@ -45,10 +45,15 @@ local:
       
         echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
+      
+        echo Replacing template name in JSON
         sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+        echo Replacing subject in JSON
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        echo Replacing text in JSON
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        echo Replacing html in JSON
+        sed -i "s/__html__/`echo $HTML`,g" $JSON;
         cat $JSON
       
         echo Updating or Creating template on AWS
@@ -87,7 +92,7 @@ dev:
           sed -i "s/__name__/`echo $ENV-$FILENAME`/g" $JSON;
           sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
           sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-          sed -i "s,__html__,`echo $HTML`,g" $JSON;
+          sed -i "s/__html__/`echo $HTML`,g" $JSON;
           cat $JSON
           aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
           sleep 3
@@ -122,7 +127,7 @@ stage-a:
         sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s/__html__/`echo $HTML`,g" $JSON;
         cat $JSON
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
         sleep 3
@@ -157,7 +162,7 @@ stage-b:
         sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s/__html__/`echo $HTML`,g" $JSON;
         cat $JSON
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
         sleep 3
@@ -192,7 +197,7 @@ stage-c:
         sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s/__html__/`echo $HTML`,g" $JSON;
         cat $JSON
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
         sleep 3
@@ -227,7 +232,7 @@ prod-a1/a2:
         sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s/__html__/`echo $HTML`,g" $JSON;
         cat $JSON
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
         sleep 3
