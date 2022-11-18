@@ -47,17 +47,17 @@ local:
         echo $TEMPLATE_CONTENT > $JSON;
       
         echo Replacing template name $TEMPLATE_NAME in JSON $JSON
-        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+        sed -i "s~__name__~`echo $TEMPLATE_NAME`~g" $JSON;
       
         echo Replacing subject in JSON
-        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s~__subject__~`echo $SUBJECT`~g" $JSON;
       
         echo Replacing text in JSON
-        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s~__text__~`echo $TEXT`~g" $JSON;
       
         echo Replacing html in JSON
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
-        sed -i "s,__html__,`echo \&`,g $JSON;
+        sed -i "s~__html__~`echo $HTML`~g" $JSON;
+        sed -i "s~__html__~`echo \&`~g $JSON;
       
         cat $JSON
       
@@ -102,13 +102,13 @@ dev:
         echo $TEMPLATE_CONTENT > $JSON;
       
         echo Replacing template name $TEMPLATE_NAME in JSON $JSON
-        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+        sed -i "s~__name__~`echo $TEMPLATE_NAME`~g" $JSON;
       
         echo Replacing subject in JSON
-        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s~__subject__~`echo $SUBJECT`~g" $JSON;
       
         echo Replacing text in JSON
-        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s~__text__~`echo $TEXT`~g" $JSON;
       
         echo Replacing html in JSON
         sed -i "s~__html__~`echo $HTML`~g" $JSON;
@@ -157,16 +157,16 @@ stage-a:
         echo $TEMPLATE_CONTENT > $JSON;
       
         echo Replacing template name $TEMPLATE_NAME in JSON $JSON
-        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+        sed -i "s~__name__~`echo $TEMPLATE_NAME`~g" $JSON;
       
         echo Replacing subject in JSON
-        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s~__subject__~`echo $SUBJECT`~g" $JSON;
       
         echo Replacing text in JSON
-        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s~__text__~`echo $TEXT`~g" $JSON;
       
         echo Replacing html in JSON
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s~__html__~`echo $HTML`~g" $JSON;
       
         cat $JSON
       
@@ -211,16 +211,16 @@ stage-b:
         echo $TEMPLATE_CONTENT > $JSON;
       
         echo Replacing template name $TEMPLATE_NAME in JSON $JSON
-        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+        sed -i "s~__name__~`echo $TEMPLATE_NAME`~g" $JSON;
       
         echo Replacing subject in JSON
-        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s~__subject__~`echo $SUBJECT`~g" $JSON;
       
         echo Replacing text in JSON
-        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s~__text__~`echo $TEXT`~g" $JSON;
       
         echo Replacing html in JSON
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s~__html__~`echo $HTML`~g" $JSON;
       
         cat $JSON
       
@@ -265,16 +265,16 @@ stage-c:
         echo $TEMPLATE_CONTENT > $JSON;
       
         echo Replacing template name $TEMPLATE_NAME in JSON $JSON
-        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+        sed -i "s~__name__~`echo $TEMPLATE_NAME`~g" $JSON;
       
         echo Replacing subject in JSON
-        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s~__subject__~`echo $SUBJECT`~g" $JSON;
       
         echo Replacing text in JSON
-        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s~__text__~`echo $TEXT`~g" $JSON;
       
         echo Replacing html in JSON
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s~__html__~`echo $HTML`~g" $JSON;
       
         cat $JSON
       
@@ -319,16 +319,16 @@ prod-a1/a2:
         echo $TEMPLATE_CONTENT > $JSON;
       
         echo Replacing template name $TEMPLATE_NAME in JSON $JSON
-        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+        sed -i "s~__name__~`echo $TEMPLATE_NAME`~g" $JSON;
       
         echo Replacing subject in JSON
-        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+        sed -i "s~__subject__~`echo $SUBJECT`~g" $JSON;
       
         echo Replacing text in JSON
-        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+        sed -i "s~__text__~`echo $TEXT`~g" $JSON;
       
         echo Replacing html in JSON
-        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+        sed -i "s~__html__~`echo $HTML`~g" $JSON;
       
         cat $JSON
       
