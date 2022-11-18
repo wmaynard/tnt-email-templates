@@ -83,25 +83,44 @@ dev:
     ENV: 107
   script:
     - |
-        for f in ./*.html; do
-          FILENAME=${f%.*};
-          sed -i "s/\"/'/g" ${FILENAME}.txt;
-          sed -i "s/\"/'/g" ${FILENAME}.html;
+      for f in ./*.html; do
+        FILENAME=${f%.*};
+        TEMPLATE_NAME=${ENV}-${FILENAME:2}
       
-          NAME=${f:2};
-          TEXT=$(cat "${FILENAME}.txt");
-          HTML=$(cat "${FILENAME}.html");
-          SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
+        echo Replacing double quotes in files
+        sed -i "s/\"/'/g" ${FILENAME}.txt;
+        sed -i "s/\"/'/g" ${FILENAME}.html;
       
-          echo $TEMPLATE_CONTENT > $JSON;
-          sed -i "s/__name__/`echo $ENV-$FILENAME`/g" $JSON;
-          sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
-          sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-          sed -i "s/__html__/`echo $HTML`,g" $JSON;
-          cat $JSON
-          aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
-          sleep 3
-        done
+        echo Reading in file contents and subject 
+        NAME=${f:2};
+        TEXT=$(cat "${FILENAME}.txt");
+        HTML=$(cat "${FILENAME}.html");
+        SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
+      
+        echo Creating template JSON
+        echo $TEMPLATE_CONTENT > $JSON;
+      
+        echo Replacing template name $TEMPLATE_NAME in JSON $JSON
+        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+      
+        echo Replacing subject in JSON
+        sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+      
+        echo Replacing text in JSON
+        sed -i "s/__text__/`echo $TEXT`/g" $JSON;
+      
+        echo Replacing html in JSON
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+      
+        cat $JSON
+      
+        echo Updating or Creating template on AWS
+        aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
+      
+        echo Uploaded $TEMPLATE_NAME
+        echo Waiting 3 seconds\; AWS restricts update call to once per second max
+        sleep 3
+      done
   rules:
     - if: $CI_COMMIT_TAG
       when: never
@@ -120,21 +139,40 @@ stage-a:
     - |
       for f in ./*.html; do
         FILENAME=${f%.*};
+        TEMPLATE_NAME=${ENV}-${FILENAME:2}
+      
+        echo Replacing double quotes in files
         sed -i "s/\"/'/g" ${FILENAME}.txt;
         sed -i "s/\"/'/g" ${FILENAME}.html;
       
+        echo Reading in file contents and subject 
         NAME=${f:2};
         TEXT=$(cat "${FILENAME}.txt");
         HTML=$(cat "${FILENAME}.html");
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
+        echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
+      
+        echo Replacing template name $TEMPLATE_NAME in JSON $JSON
+        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+      
+        echo Replacing subject in JSON
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+      
+        echo Replacing text in JSON
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s/__html__/`echo $HTML`,g" $JSON;
+      
+        echo Replacing html in JSON
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+      
         cat $JSON
+      
+        echo Updating or Creating template on AWS
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
+      
+        echo Uploaded $TEMPLATE_NAME
+        echo Waiting 3 seconds\; AWS restricts update call to once per second max
         sleep 3
       done
   rules:
@@ -155,21 +193,40 @@ stage-b:
     - |
       for f in ./*.html; do
         FILENAME=${f%.*};
+        TEMPLATE_NAME=${ENV}-${FILENAME:2}
+      
+        echo Replacing double quotes in files
         sed -i "s/\"/'/g" ${FILENAME}.txt;
         sed -i "s/\"/'/g" ${FILENAME}.html;
       
+        echo Reading in file contents and subject 
         NAME=${f:2};
         TEXT=$(cat "${FILENAME}.txt");
         HTML=$(cat "${FILENAME}.html");
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
+        echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
+      
+        echo Replacing template name $TEMPLATE_NAME in JSON $JSON
+        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+      
+        echo Replacing subject in JSON
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+      
+        echo Replacing text in JSON
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s/__html__/`echo $HTML`,g" $JSON;
+      
+        echo Replacing html in JSON
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+      
         cat $JSON
+      
+        echo Updating or Creating template on AWS
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
+      
+        echo Uploaded $TEMPLATE_NAME
+        echo Waiting 3 seconds\; AWS restricts update call to once per second max
         sleep 3
       done
   rules:
@@ -190,21 +247,40 @@ stage-c:
     - |
       for f in ./*.html; do
         FILENAME=${f%.*};
+        TEMPLATE_NAME=${ENV}-${FILENAME:2}
+      
+        echo Replacing double quotes in files
         sed -i "s/\"/'/g" ${FILENAME}.txt;
         sed -i "s/\"/'/g" ${FILENAME}.html;
       
+        echo Reading in file contents and subject 
         NAME=${f:2};
         TEXT=$(cat "${FILENAME}.txt");
         HTML=$(cat "${FILENAME}.html");
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
+        echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
+      
+        echo Replacing template name $TEMPLATE_NAME in JSON $JSON
+        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+      
+        echo Replacing subject in JSON
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+      
+        echo Replacing text in JSON
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s/__html__/`echo $HTML`,g" $JSON;
+      
+        echo Replacing html in JSON
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+      
         cat $JSON
+      
+        echo Updating or Creating template on AWS
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
+      
+        echo Uploaded $TEMPLATE_NAME
+        echo Waiting 3 seconds\; AWS restricts update call to once per second max
         sleep 3
       done
   rules:
@@ -225,21 +301,40 @@ prod-a1/a2:
     - |
       for f in ./*.html; do
         FILENAME=${f%.*};
+        TEMPLATE_NAME=${ENV}-${FILENAME:2}
+      
+        echo Replacing double quotes in files
         sed -i "s/\"/'/g" ${FILENAME}.txt;
         sed -i "s/\"/'/g" ${FILENAME}.html;
       
+        echo Reading in file contents and subject 
         NAME=${f:2};
         TEXT=$(cat "${FILENAME}.txt");
         HTML=$(cat "${FILENAME}.html");
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
+        echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $ENV-$NAME`/g" $JSON;
+      
+        echo Replacing template name $TEMPLATE_NAME in JSON $JSON
+        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
+      
+        echo Replacing subject in JSON
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
+      
+        echo Replacing text in JSON
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
-        sed -i "s/__html__/`echo $HTML`,g" $JSON;
+      
+        echo Replacing html in JSON
+        sed -i "s,__html__,`echo $HTML`,g" $JSON;
+      
         cat $JSON
+      
+        echo Updating or Creating template on AWS
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
+      
+        echo Uploaded $TEMPLATE_NAME
+        echo Waiting 3 seconds\; AWS restricts update call to once per second max
         sleep 3
       done
   rules:
