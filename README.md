@@ -164,3 +164,4 @@ There are a couple of hiccups to be aware of when working in these templates:
   * Using something less restrictive than `sed` for replacements would be great.
 * The CI script should eventually delete templates that _aren't_ found in this repo.
 * Adding a final step that can be used to delete existing templates may be nice, though should only be rarely used for debugging purposes.
+* Finding a way to manage the text content from within the `.html` file would be nice.  Ideally we only have to open one file to maintain a full template.
