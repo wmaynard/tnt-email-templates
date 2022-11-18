@@ -64,7 +64,7 @@ local:
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
         
         echo Uploaded $TEMPLATE_NAME
-        echo Waiting 3 seconds; AWS restricts update call to once per second max
+        echo Waiting 3 seconds\; AWS restricts update call to once per second max
         sleep 3
       done
   rules:
