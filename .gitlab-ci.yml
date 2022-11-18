@@ -31,6 +31,7 @@ local:
     - |
       for f in ./*.html; do
         FILENAME=${f%.*};
+        TEMPLATE_NAME=${ENV}-${FILENAME}
       
         echo Replacing double quotes in files
         sed -i "s/\"/'/g" ${FILENAME}.txt;
@@ -44,7 +45,7 @@ local:
       
         echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
-        sed -i "s/__name__/`echo $FILENAME`/g" $JSON;
+        sed -i "s/__name__/`echo $TEMPLATE_NAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
         sed -i "s,__html__,`echo $HTML`,g" $JSON;
