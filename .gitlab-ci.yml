@@ -31,21 +31,29 @@ local:
     - |
       for f in ./*.html; do
         FILENAME=${f%.*};
+      
+        echo Replacing double quotes in files
         sed -i "s/\"/'/g" ${FILENAME}.txt;
         sed -i "s/\"/'/g" ${FILENAME}.html;
       
+        echo Reading in file contents and subject 
         NAME=${f:2};
         TEXT=$(cat "${FILENAME}.txt");
         HTML=$(cat "${FILENAME}.html");
         SUBJECT=$(head -n 1 "${FILENAME}.html" | tail -c +6 | head -c -5);
       
+        echo Creating template JSON
         echo $TEMPLATE_CONTENT > $JSON;
         sed -i "s/__name__/`echo $FILENAME`/g" $JSON;
         sed -i "s/__subject__/`echo $SUBJECT`/g" $JSON;
         sed -i "s/__text__/`echo $TEXT`/g" $JSON;
         sed -i "s,__html__,`echo $HTML`,g" $JSON;
         cat $JSON
+      
+        echo Updating or Creating template on AWS
         aws ses update-template --cli-input-json file://$JSON --region us-east-1 || aws ses create-template --cli-input-json file://$JSON --region us-east-1
+        
+        echo Uploaded $ENV-$FILENAME
         sleep 3
       done
   rules:
