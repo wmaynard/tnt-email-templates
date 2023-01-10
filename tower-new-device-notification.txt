@@ -1,3 +1,6 @@
 A new device was logged into your account.
 
+{device}
+{timecode}
+
 Not you?  Contact support so we can assist you.
