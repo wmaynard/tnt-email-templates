@@ -1,0 +1,17 @@
+{title}
+{message}
+
+Incident ID: {id}
+    Service: {audience}
+        POC: {owner}
+ Active For: {timeActive}
+     Status: {status}
+     Impact: {impact}
+
+Available actions (copy into URL bar):
+
+Acknowledge: {endpoint}?id={id}
+    Resolve: {endpoint}?id={id}
+     Cancel: {endpoint}?id={id}
+
+This is an alert configured by and sent from Platform Services.

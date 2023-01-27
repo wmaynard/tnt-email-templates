@@ -1,0 +1,48 @@
+<!-- Platform Alert: {title} -->
+<html lang="en">
+<body style="font-family: monospace">
+<h1>{title}</h1>
+<h2>{message}</h2>
+
+<hr />
+<table>
+	<tr>
+		<td style="text-align: right">Incident ID :</td>
+		<td>{id}</td>
+	</tr>
+	<tr>
+		<td style="text-align: right">Service :</td>
+		<td>{audience}</td>
+	</tr>
+	<tr>
+		<td style="text-align: right">POC :</td>
+		<td>{owner}</td>
+	</tr>
+	<tr>
+		<td style="text-align: right">Active For:</td>
+		<td>{timeActive}</td>
+	</tr>
+	<tr>
+		<td style="text-align: right">Status :</td>
+		<td>{status}</td>
+	</tr>
+	<tr>
+		<td style="text-align: right">Impact :</td>
+		<td>{impact}</td>
+	</tr>
+</table>
+<hr />
+
+<h2>Available actions:</h2>
+<ul>
+	<li><a href="{endpoint}?id={id}">Acknowledge</a></li>
+	<li><a href="{endpoint}?id={id}">Resolve</a></li>
+	<li><a href="{endpoint}?id={id}">Cancel</a></li>
+</ul>
+
+<hr />
+
+<h6>This is an alert configured by and sent from Platform Services.</h6>
+
+</body>
+</html>
