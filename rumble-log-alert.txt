@@ -10,8 +10,8 @@ Incident ID: {id}
 
 Available actions (copy into URL bar):
 
-Acknowledge: {endpoint}?id={id}
-    Resolve: {endpoint}?id={id}
-     Cancel: {endpoint}?id={id}
+Acknowledge: {acknowledge}?id={id}
+    Resolve: {resolve}?id={id}
+     Cancel: {cancel}?id={id}
 
 This is an alert configured by and sent from Platform Services.
