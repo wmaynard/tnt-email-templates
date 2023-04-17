@@ -123,7 +123,7 @@ dev:
       done
         
 #        aws ses update-template --cli-input-json file://$JSON --region ap-southeast-1 || aws ses create-template --cli-input-json file://$JSON --region ap-southeast-1
-#        echo Uploaded $TEMPLATE_NAME to us-east-1
+#        echo Uploaded $TEMPLATE_NAME to ap-southeast-1
 #        echo Waiting 3 seconds\;
 #        sleep 3
   rules:
@@ -181,7 +181,7 @@ stage-a:
         sleep 3
       
         aws ses update-template --cli-input-json file://$JSON --region ap-southeast-1 || aws ses create-template --cli-input-json file://$JSON --region ap-southeast-1
-        echo Uploaded $TEMPLATE_NAME to us-east-1
+        echo Uploaded $TEMPLATE_NAME to ap-southeast-1
         echo Waiting 3 seconds\;
         sleep 3
       done
@@ -242,7 +242,7 @@ stage-b:
       
 #        Uncomment the below lines and move above `done` if APSE is enabled in stage-b
 #        aws ses update-template --cli-input-json file://$JSON --region ap-southeast-1 || aws ses create-template --cli-input-json file://$JSON --region ap-southeast-1
-#        echo Uploaded $TEMPLATE_NAME to us-east-1
+#        echo Uploaded $TEMPLATE_NAME to ap-southeast-1
 #        echo Waiting 3 seconds\;
 #        sleep 3
   rules:
@@ -300,7 +300,7 @@ prod-a1/a2:
         sleep 3
       
         aws ses update-template --cli-input-json file://$JSON --region ap-southeast-1 || aws ses create-template --cli-input-json file://$JSON --region ap-southeast-1
-        echo Uploaded $TEMPLATE_NAME to us-east-1
+        echo Uploaded $TEMPLATE_NAME to ap-southeast-1
         echo Waiting 3 seconds\;
         sleep 3
       done
